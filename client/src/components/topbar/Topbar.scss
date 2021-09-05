@@ -47,18 +47,19 @@
     flex: 6;
     width: 100%;
     height: 100%;
+  }
 
-    .topList {
-      display: flex;
-      justify-content: center;
-      list-style: none;
+  // pulled it out so it effects top-center and top-right links
+  .topList {
+    display: flex;
+    justify-content: center;
+    list-style: none;
 
-      .topListItem {
-        margin-right: 20px;
-        font-size: 18px;
-        font-weight: 300;
-        cursor: pointer;
-      }
+    .topListItem {
+      margin-right: 20px;
+      font-size: 18px;
+      font-weight: 300;
+      cursor: pointer;
     }
   }
 }

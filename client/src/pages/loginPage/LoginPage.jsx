@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./LoginPage.scss";
 
 const LoginPage = () => {
@@ -12,7 +13,11 @@ const LoginPage = () => {
         <input type="password" placeholder="password..." />
         <button className="loginButton">Login</button>
       </form>
-      <button className="loginRegisterButton">Register</button>
+      <button className="loginRegisterButton">
+        <Link to="/register" className="link">
+          Register
+        </Link>
+      </button>
     </div>
   );
 };
