@@ -19,7 +19,7 @@ const controllerUser = {
        * password is handled inside model with 'select' property, so it's not included
        * in document we get from DB, if we explicitly don't state it
        * but in other case we would need to delete it manually like:
-       * const newUser = {...user}
+       * const newUser = {...user._doc}
        * newUser.password = undefine;
        * res.json({user: newUser})
        */
@@ -66,16 +66,20 @@ const controllerUser = {
          * update and save user into DB
          */
 
-        user.username = username;
-        user.password = password;
-        user.email = email;
+        user._doc.username = username;
+        user._doc.password = password;
+        user._doc.email = email;
 
         await user.save();
 
+        /**
+         * @desc
+         * remove password from user object
+         */
         const newUser = { ...user._doc };
         newUser.password = undefined;
 
-        console.log("user from update:", user);
+        //console.log("user from update:", user);
         return res
           .status(200)
           .json({ success: true, msg: "User Updated.", user: newUser });
