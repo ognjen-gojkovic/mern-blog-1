@@ -1,31 +1,31 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Post.scss";
 
-const Post = () => {
+const Post = ({ post }) => {
   return (
     <div className="post">
-      <img
-        className="postImg"
-        src="https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-        alt="tech"
-      />
+      {post.photo && <img className="postImg" src={post.photo} alt="tech" />}
+
       <div className="postInfo">
-        <div className="poostCats">
-          <span className="postCat">Music</span>
-          <span className="postCat">Life</span>
+        <div className="postCats">
+          {post.categories.map((cat) => (
+            <span key={cat.name} className="postCat">
+              {cat.name}
+            </span>
+          ))}
         </div>
-        <span className="postTitle">Lorem ipsum dolor sit amet.</span>
+        <Link to={`/post/${post._id}`} className="link">
+          <span className="postTitle">{post.title}</span>
+        </Link>
         <hr />
-        <span className="postDate">1 hour ago</span>
+        <span className="postDate">
+          {`${new Date(post.createdAt).toLocaleDateString()} | ${new Date(
+            post.createdAt
+          ).toLocaleTimeString()}`}
+        </span>
       </div>
-      <p className="postDesc">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, libero?
-        Officia sint illo, ipsum nemo praesentium cupiditate soluta dolor
-        doloribus! Sed reiciendis commodi amet perferendis numquam fugiat at
-        quasi in aliquid tempore harum rerum explicabo, ullam optio officia
-        fugit minima vel deserunt. Iusto modi maxime corporis quisquam ad
-        placeat saepe?
-      </p>
+      <p className="postDesc">{post.desc}</p>
     </div>
   );
 };

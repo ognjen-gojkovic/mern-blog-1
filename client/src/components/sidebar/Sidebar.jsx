@@ -1,7 +1,20 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Sidebar.scss";
 
 const Sidebar = () => {
+  const [state, setState] = React.useState({
+    cats: [],
+  });
+
+  React.useEffect(() => {
+    fetch("http://127.0.0.1:5000/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setState({ ...state, cats: data.categories });
+      });
+  }, []);
+
   return (
     <div className="sidebar">
       <div className="sidebarItem">
@@ -18,12 +31,13 @@ const Sidebar = () => {
       <div className="sidebarItem">
         <div className="sidebarTitle">CATEGORIES</div>
         <ul className="sidebarList">
-          <li className="sidebarListItem">Life</li>
-          <li className="sidebarListItem">Music</li>
-          <li className="sidebarListItem">Style</li>
-          <li className="sidebarListItem">Sport</li>
-          <li className="sidebarListItem">Tech</li>
-          <li className="sidebarListItem">Cinema</li>
+          {state.cats.map((cat) => (
+            <Link to={`/?cat=${cat.name}`} className="link">
+              <li key={cat.name} className="sidebarListItem">
+                {cat.name.split("")[0].toUpperCase() + cat.name.substring(1)}
+              </li>
+            </Link>
+          ))}
         </ul>
       </div>
       <div className="sidebarItem">
