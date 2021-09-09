@@ -1,17 +1,40 @@
 import React from "react";
+import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
+
 import "./SinglePost.scss";
 
 const SinglePost = () => {
+  const location = useLocation();
+  console.log(location);
+  const path = location.pathname.split("/")[2];
+  const [state, setState] = React.useState({
+    post: null,
+  });
+
+  React.useEffect(() => {
+    fetch(`http://127.0.0.1:5000/api/posts/${path}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("singlePost:", data);
+        if (data.success) setState({ ...state, post: data.post });
+        else alert(data.msg);
+      });
+  }, [path]);
+
   return (
     <div className="singlePost">
       <div className="singlePostWrapper">
-        <img
-          src="https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-          alt="tech"
-          className="singlePostImg"
-        />
+        {state.post && (
+          <img
+            src={state.post.photo}
+            alt={state.post.title}
+            className="singlePostImg"
+          />
+        )}
+
         <h1 className="singlePostTitle">
-          Lorem ipsum dolor sit amet.
+          {state.post && state.post.title}
           <div className="singlePostEdit">
             <i className="singlePostIcon far fa-edit"></i>
             <i className="singlePostIcon far fa-trash-alt"></i>
@@ -19,20 +42,23 @@ const SinglePost = () => {
         </h1>
         <div className="singlePostInfo">
           <span className="singlePostAuthor">
-            Author: <b>John Doe</b>
+            Author:
+            {state.post && (
+              <Link to={`/?user=${state.post.username}`} className="link">
+                <b>{state.post && state.post.username}</b>
+              </Link>
+            )}
           </span>
-          <span className="singlePostDate">1 hour ago</span>
+          <span className="singlePostDate">
+            {state.post &&
+              `${new Date(
+                state.post.createdAt
+              ).toLocaleDateString()} | ${new Date(
+                state.post.createdAt
+              ).toLocaleTimeString()}`}
+          </span>
         </div>
-        <p className="singlePostDesc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, ex
-          veniam, numquam similique et facilis animi distinctio commodi, culpa
-          quia dolore unde explicabo nihil? Doloribus incidunt sapiente nostrum
-          earum veritatis sunt mollitia, ad placeat deleniti unde quia atque ea
-          laborum maxime facilis quidem porro beatae quas iure? Ab, autem quod!
-          Laudantium id, alias a reprehenderit atque fugit nulla quisquam
-          doloribus velit blanditiis voluptatibus sequi non rerum minima in
-          cupiditate rem.
-        </p>
+        <p className="singlePostDesc">{state.post && state.post.desc}</p>
       </div>
     </div>
   );
