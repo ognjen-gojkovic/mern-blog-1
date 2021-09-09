@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       select: false,
+      minlength: 6,
     },
     profilePic: {
       type: String,
@@ -38,6 +39,10 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+/**
+ * @desc
+ * hash password before it gets saved into database
+ */
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) next();
 
@@ -45,10 +50,20 @@ UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+/**
+ * @desc
+ * on login check if user provided correct password
+ */
 UserSchema.methods.matchPasswords = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+/**
+ * @desc
+ * on login/register if everthing is ok generate
+ * and send access and refresh tokens to frontend via usual response,
+ * on frontend tokens will be handled with local and session storage
+ */
 UserSchema.methods.getAccessToken = function () {
   return jwt.sign(
     { id: this._id, user: this.username },
@@ -69,6 +84,10 @@ UserSchema.methods.getRefreshToken = function () {
   );
 };
 
+/**
+ * @desc
+ * for handling forget password, not fully developed yet
+ */
 UserSchema.methods.resetPaswordToken = function () {
   const resetSecret = crypto.randomBytes(20).toString("latin1");
 

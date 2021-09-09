@@ -10,12 +10,15 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-app.route("/api").get((req, res) => {
+app.route("/").get((req, res) => {
   return res.status(200).json({ success: true, msg: "Init response..." });
 });
 
 app.use("/api/auth", require("./routers/Router.Auth"));
 app.use("/api/users", require("./routers/Router.Users"));
+app.use("/api/posts", require("./routers/Router.Posts"));
+app.use("/api/categories", require("./routers/Router.Categories"));
+app.use("/api/upload", require("./routers/Router.Upload"));
 
 const PORT = process.env.PORT || 5000;
 
@@ -27,14 +30,3 @@ process.on("unhandledRejection", (err, promise) => {
   if (err) console.log(err);
   server.close(() => process.exit(1));
 });
-
-/*
-
-{
-    "username": "MaxUpdated",
-    "email": "test1@test.com",
-    "password": "123123",
-    "userId": "61363778bf0b0856051fd107"
-}
-
-*/
